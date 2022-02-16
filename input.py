@@ -18,14 +18,14 @@ class ProblemInput:
             self.n = int(line[0])
         elif cnt%2 == 1:
             id = (cnt - 1)%2
-            line.pop()
+            line.pop(0)
             self.clients_to_like[id] = line
             for i in line:
                 self.like_to_clients[i] = self.like_to_clients.get(i, []) + [id]
 
         else:
             id = (cnt - 1)%2
-            line.pop()
+            line.pop(0)
             self.clients_to_dislikes[id] = line
             for i in line:
                 self.dislike_to_clients[i] = self.dislike_to_clients.get(i, []) + [id]
