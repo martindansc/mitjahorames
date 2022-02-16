@@ -17,14 +17,14 @@ class ProblemInput:
         if cnt == 0:
             self.n = int(line[0])
         elif cnt%2 == 1:
-            id = (cnt - 1)/2
+            id = (cnt - 1)//2
             line.pop(0)
             self.clients_to_like[id] = map(lambda x: x.strip(), line) 
             for i in self.clients_to_like[id]:
                 self.like_to_clients[i] = self.like_to_clients.get(i, []) + [id]
 
         else:
-            id = (cnt - 1)/2
+            id = (cnt - 1)//2
             line.pop(0)
             self.clients_to_dislikes[id] = map(lambda x: x.strip(), line) 
             for i in self.clients_to_dislikes[id]:
