@@ -10,6 +10,8 @@ numpy = "*"
 pyvis = "*"
 igraph = "*"
 cairocffi = "*"
+networkx = "*"
+scipy = "*"
 
 [dev-packages]
 ipykernel = "*"
