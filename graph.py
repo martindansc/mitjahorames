@@ -3,6 +3,8 @@ from pyvis.network import Network
 import matplotlib.pyplot as plt
 import networkx as nx
 import igraph
+import pydot
+from IPython.display import Image, display
 
 class Graph:
     def __init__(self):
@@ -125,4 +127,14 @@ class GraphNx(Graph):
 
     def plot(self):
         nx.draw(self.G, with_labels=True, font_weight='bold')
-        plt.show()  
+        plt.show()
+
+    def toGephi(self):
+        nx.write_gexf(self.G, "./outputs/graph.gexf")
+
+
+class GraphDot(GraphNx):
+    
+    def plot(self):
+        graph = nx.drawing.nx_pydot.to_pydot(self.G)
+        graph.write_svg('./outputs/graph.svg')

@@ -1,7 +1,8 @@
 from input import ProblemInput
 from solution import Solution
-from graph import GraphIG, GraphPyVis, GraphNx
+from graph import GraphIG, GraphPyVis, GraphNx, GraphDot
 import utils
+
 inputData = ProblemInput("input/e_elaborate.in.txt")
 
 # graph1 = GraphPyVis()
@@ -19,9 +20,9 @@ inputData = ProblemInput("input/e_elaborate.in.txt")
 # graph2.gDic2(inputData.clients_to_dislikes, inputData.dislike_to_clients, 'red')
 # graph2.plot()
 
-graph3 = GraphNx()
+graph3 = GraphDot()
 graph3.gDict(inputData.incompatible_clients)
-graph3.plot()
+graph3.toGephi()
 
 (id, degree) = utils.get_max_from_dict_of_lists(inputData.incompatible_clients)
 while degree > 0:

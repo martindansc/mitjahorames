@@ -12,6 +12,8 @@ igraph = "*"
 cairocffi = "*"
 networkx = "*"
 scipy = "*"
+pydot = "*"
+ipython = "*"
 
 [dev-packages]
 ipykernel = "*"
