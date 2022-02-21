@@ -14,8 +14,8 @@ class ProblemInput:
             for dislike in self.clients_to_dislikes[c]:
                 if dislike in self.like_to_clients:
                     for c2 in self.like_to_clients[dislike]:
-                        self.incompatible_clients[c] = self.incompatible_clients.get(c, []) + [c2]
-                        self.incompatible_clients[c2] = self.incompatible_clients.get(c2, []) + [c]
+                        self.incompatible_clients[c] = list(set(self.incompatible_clients.get(c, []) + [c2]))
+                        self.incompatible_clients[c2] = list(set(self.incompatible_clients.get(c2, []) + [c]))
 
     def init_variables(self):
         self.like_to_clients = {}
