@@ -3,7 +3,7 @@ from solution import Solution
 from graph import GraphIG, GraphPyVis, GraphNx, GraphDot
 import utils
 
-inputData = ProblemInput("input/e_elaborate.in.txt")
+inputData = ProblemInput("input/d_difficult.in.txt")
 
 # graph1 = GraphPyVis()
 # graph1.gDict(inputData.clients_to_like, 'blue')
@@ -20,7 +20,7 @@ inputData = ProblemInput("input/e_elaborate.in.txt")
 # graph2.gDic2(inputData.clients_to_dislikes, inputData.dislike_to_clients, 'red')
 # graph2.plot()
 
-graph3 = GraphDot()
+graph3 = GraphNx()
 graph3.gDict(inputData.incompatible_clients)
 graph3.toGephi()
 

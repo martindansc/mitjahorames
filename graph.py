@@ -3,8 +3,6 @@ from pyvis.network import Network
 import matplotlib.pyplot as plt
 import networkx as nx
 import igraph
-import pydot
-from IPython.display import Image, display
 
 class Graph:
     def __init__(self):
@@ -25,7 +23,7 @@ class Graph:
     def plot(self):
         raise NotImplementedError
 
-    def gDict(self, dictList, diff_color = False, color="blue"):
+    def gDict(self, dictList, color="blue"):
         for (key, l) in dictList.items():
             self.add_node(key, "blue")
             for value in l:

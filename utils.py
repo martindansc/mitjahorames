@@ -2,7 +2,7 @@ def get_max_from_dict_of_lists(dict):
     max_key = None
     max_value = 0
     for (key, list) in dict.items():
-        value = len(list)
+        value = len(list) # Here the function
         if max_key == None or value > max_value:
             max_value = value
             max_key = key
