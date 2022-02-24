@@ -152,29 +152,45 @@ class ProblemInput(SolutionInterface):
         unfullfilled_roles = self.projects[project].unfullfilled_roles()
         contributors = {}
         for role_skill in unfullfilled_roles:
-            contribName = self.choose_contrib(role_skill, unfullfilled_roles[role_skill])
+            contribName = self.choose_contrib(role_skill, unfullfilled_roles[role_skill], contributors.values())
 
-            if not contribName:
-                return None
+            if contribName:
+               contributors[role_skill] = contribName
 
-            contributors[role_skill] = contribName
+        for role_skill in unfullfilled_roles:
+            if role_skill not in contributors.keys():
+
+                contribName = self.choose_contrib(role_skill, unfullfilled_roles[role_skill], contributors.values())
+
+                if contribName:
+                    contributors[role_skill] = contribName
+                else:
+                    return None
 
         self.add_project(project, contributors)
 
-    def choose_contrib(self, skill, level):
+    def choose_contrib(self, skill, level, project_contributors):
         #choose contributor with less skills and level that fulfills the job
         #dict of contributors, name skill, level skill (int)
 
         contributor_dict  = {'name':[],'skill':[],'level':[],'total_skills':[]}
         for name in self.available_contributors:
-            contr = self.contributors[name]
-            if skill in contr.skills.keys():
-                contributor_dict['name'].append(contr.name)
-                contributor_dict['level'].append(int(contr.skills[skill]))
-                contributor_dict['skill'].append(skill)
-                contributor_dict['total_skills'].append(len(contr.skills.keys()))
+            if name not in project_contributors:
+                contr = self.contributors[name]
+                if skill in contr.skills.keys():
+                    contributor_dict['name'].append(contr.name)
+                    contributor_dict['level'].append(int(contr.skills[skill]))
+                    contributor_dict['skill'].append(skill)
+                    contributor_dict['total_skills'].append(len(contr.skills.keys()))
         df = pd.DataFrame(contributor_dict)
-        df = df[df['level']>= int(level)]
+
+        level_to_compare = int(level)
+        for contrib in project_contributors:
+            mentor_skills = self.contributors[contrib].skills
+            if hasattr(mentor_skills, skill) and mentor_skills[skill] >= level:
+                level_to_compare -= 1
+
+        df = df[df['level']>= level_to_compare]
         df.sort_values(by= ['level','total_skills'], ascending=[True,True])
         if df.shape[0]>0:
             return df['name'].iloc[0]

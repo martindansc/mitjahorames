@@ -4,7 +4,7 @@ from graph import GraphIG, GraphPyVis, GraphNx, GraphDot
 import pandas as pd
 import utils
 
-inputData = ProblemInput("input/a_an_examplein.txt")
+inputData = ProblemInput("input/b_better_start_small.in.txt")
 
 def score_projects(dict_projects, list_projects, time):
     """
