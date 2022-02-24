@@ -17,9 +17,9 @@ class Contributor:
 class Project: 
     def __init__(self, name, days, score, deadline, needed_contributors):
         self.name = name
-        self.days = days
-        self.score = score
-        self.deadline = deadline
+        self.days = int(days)
+        self.score = int(score)
+        self.deadline = int(deadline)
         self.needed_contributors = int(needed_contributors)
         self.skills = {}
         self.contributors = {}
@@ -102,6 +102,10 @@ class ProblemInput:
         return rp
     
     def advance_time(self):
+        if len(self.current_projects) == 0:
+            print("You should add at least one project to advance the time")
+            return None
+            
         min_date = min(self.current_projects.values(), key=attrgetter('end_date')).end_date
         for (projectName, projectObj) in self.remaining_projects.items():
             if projectObj.end_date == min_date:
@@ -115,6 +119,7 @@ class ProblemInput:
         projectObj.start_project(self.time)
         for skill, contributor in skills_contributors.items():
             projectObj.add_contributor(skill, contributor)
+            self.available_contributors.remove(contributor)
 
         self.current_projects[project] = projectObj
         self.remaining_projects.remove(project)
@@ -124,7 +129,6 @@ class ProblemInput:
             self.available_contributors.add(contributor)
 
         self.total_score += project.final_score
-        
             
     def init_variables(self):
         self.n_contributors = -1
