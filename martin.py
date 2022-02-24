@@ -43,4 +43,5 @@ while len(inputData.remaining_projects) > 0:
     if inputData.advance_time():
         break
 
+inputData.save()
 print(inputData.total_score)
