@@ -14,6 +14,7 @@ networkx = "*"
 scipy = "*"
 pydot = "*"
 ipython = "*"
+panda = "*"
 
 [dev-packages]
 ipykernel = "*"

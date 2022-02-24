@@ -135,8 +135,6 @@ class ProblemInput:
         self.total_score += project.final_score
             
     def init_variables(self):
-        self.n_contributors = -1
-        self.n_projects = -1
         self.contributors = {}
         self.projects = {}
 
