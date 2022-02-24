@@ -47,6 +47,11 @@ class Project:
     def has_all_roles_fullfilled(self): 
         return len(self.contributors) == len(self.skills)
 
+
+    def score_if_now(self, time):
+        end_time = time + self.days
+        return self.score - max(0, end_time - self.deadline)
+
 class ProblemInput:
     def __init__(self, filepath):
         self.init_variables()
@@ -74,7 +79,7 @@ class ProblemInput:
         for i in range(self.num_projects):
             project, duration, score, best_by, needed_contributors =  self.read_line()
             self.projects[project] = Project(project, duration, score, best_by, needed_contributors)
-            self.projects.add(project)
+            self.remaining_projects.add(project)
 
             for j in range(int(needed_contributors)):
                 skill, level = self.read_line()
@@ -92,7 +97,7 @@ class ProblemInput:
 
     
     def advance_time(self):
-        min_date = min(self.remaining_projects.values(), key=attrgetter('end_date')).end_date
+        min_date = min(self.remaining_projects, key=attrgetter('end_date')).end_date
         for (projectName, projectObj) in self.remaining_projects.items():
             if projectObj.end_date == min_date:
                 self.remove_project(projectObj)
@@ -160,4 +165,4 @@ class ProblemInput:
         return None
 
     def choose_contrib(self, available_contributors, skill_name, skill_level): 
-        return self.contributors[0];
+        return self.contributors[0]
