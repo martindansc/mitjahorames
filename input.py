@@ -24,6 +24,9 @@ class Project:
     def needed_skill(self, skillname, level):
         self.skills[skillname] = level
 
+    def has_all_roles_fullfilled(self): 
+        return len(self.contributors) == len(self.skills)
+
 class ProblemInput:
     def __init__(self, filepath):
         self.init_variables()
@@ -63,3 +66,11 @@ class ProblemInput:
         myline = self.file.readline()
         line = myline.rstrip("\n").split(" ")
         return line
+
+    def assign_contributors(self, project):
+        while not project.has_all_roles_fullfilled():
+            contribName = self.choose_contrib(project)
+            project.add_contributor(contribName)
+
+    def choose_contrib(self, project): 
+        return self.contributors[0];
