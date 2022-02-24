@@ -34,6 +34,15 @@ class Project:
 
     def add_contributor(self, skill, contributor):
         self.contributors[skill] = contributor
+    def unfullfilled_roles(self):
+        unfillfilled_roles = {}
+        for skill_name in self.skills:
+            if not self.contributors[skill_name]:
+                unfillfilled_roles[skill_name] = self.skills[skill_name]
+        return unfillfilled_roles
+
+    def has_all_roles_fullfilled(self): 
+        return len(self.contributors) == len(self.skills)
 
 class ProblemInput:
     def __init__(self, filepath):
@@ -79,8 +88,6 @@ class ProblemInput:
         # treure els current que acabin en aquest
         next = self.current_projects.pop()
         self.time = next.end_time
-        while(self.current_projects.next().time == next)
-        self
         pass
 
     def add_project(self, project, skills_contributors):
@@ -109,3 +116,12 @@ class ProblemInput:
         myline = self.file.readline()
         line = myline.rstrip("\n").split(" ")
         return line
+
+    def assign_contributors(self, project):
+        unfullfilled_roles = project.unfullfilled_roles()
+        for role_skill in unfullfilled_roles:
+            contribName = self.choose_contrib(project, role_skill, unfullfilled_roles[role_skill])
+            project.add_contributor(contribName)
+
+    def choose_contrib(self, project): 
+        return self.contributors[0];
