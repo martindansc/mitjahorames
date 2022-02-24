@@ -1,6 +1,7 @@
 from operator import attrgetter
 from pathlib import Path
 import pandas as pd
+from solution import SolutionInterface
 
 class Contributor:
     def __init__(self,name, num_skills):
@@ -22,11 +23,13 @@ class Project:
         self.deadline = int(deadline)
         self.needed_contributors = int(needed_contributors)
         self.skills = {}
+        self.role_skills = set()
         self.contributors = {}
         self.started = False
 
     def needed_skill(self, skillname, level):
         self.skills[skillname] = level
+        self.role_skills.add(skillname)
 
     def start_project(self, time):
         self.started = True
@@ -52,8 +55,10 @@ class Project:
         end_time = time + self.days
         return self.score - max(0, end_time - self.deadline)
 
-class ProblemInput:
+class ProblemInput(SolutionInterface):
+
     def __init__(self, filepath):
+        super().__init__(Path(filepath).stem)
         self.init_variables()
         self.simulation()
 
@@ -173,3 +178,25 @@ class ProblemInput:
         if df.shape[0]>0:
             return df['name'].iloc[0]
         return None
+
+    def planned_projects_sorted_by_time(self):
+        planned_projects = filter(lambda p: hasattr(p, 'start_time'), self.projects.values())
+
+        return sorted(planned_projects, key=lambda p: p.start_time)
+
+
+    def to_string(self):
+        planned_projects = self.planned_projects_sorted_by_time()
+
+        output = str(len(planned_projects))
+
+        for project in planned_projects:
+            output += "\n" + project.name + "\n"
+
+            contributors = set()
+            for skill_name in project.role_skills:
+                contributors.add(project.contributors[skill_name])
+
+            output += ' '.join(contributors)
+
+        return output

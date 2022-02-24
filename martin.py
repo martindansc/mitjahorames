@@ -20,4 +20,4 @@ while len(inputData.remaining_projects) > 0:
     if inputData.advance_time():
         break
 
-print(inputData)
+inputData.save()

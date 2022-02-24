@@ -20,7 +20,7 @@ class SolutionInterface:
 
     def save(self):
         toSave = self.to_string()
-        with open("./outputs/%s_%i_%i" % (self.problem_input.input_name, self.value(), time.time()), "w") as text_file:
+        with open("./outputs/%s_%i" % (self.input_name, time.time()), "w") as text_file:
             text_file.write(toSave)
 
 
