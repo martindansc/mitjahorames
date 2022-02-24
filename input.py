@@ -23,13 +23,13 @@ class Project:
         self.deadline = int(deadline)
         self.needed_contributors = int(needed_contributors)
         self.skills = {}
-        self.role_skills = set()
+        self.role_skills = []
         self.contributors = {}
         self.started = False
 
     def needed_skill(self, skillname, level):
         self.skills[skillname] = int(level)
-        self.role_skills.add(skillname)
+        self.role_skills.append(skillname)
 
     def start_project(self, time):
         self.started = True
@@ -194,9 +194,9 @@ class ProblemInput(SolutionInterface):
         for project in planned_projects:
             output += "\n" + project.name + "\n"
 
-            contributors = set()
+            contributors = list()
             for skill_name in project.role_skills:
-                contributors.add(project.contributors[skill_name])
+                contributors.append(project.contributors[skill_name])
 
             output += ' '.join(contributors)
 
