@@ -20,9 +20,20 @@ class Project:
         self.deadline = deadline
         self.needed_contributors = int(needed_contributors)
         self.skills = {}
+        self.contributors = {}
+        self.started = False
 
     def needed_skill(self, skillname, level):
         self.skills[skillname] = level
+
+    def start_project(self, time):
+        self.started = True
+        self.start_time = time
+        self.end_time = time + self.days
+        self.final_score = self.score - max(0, self.end_time - self.deadline)
+
+    def add_contributor(self, skill, contributor):
+        self.contributors[skill] = contributor
 
 class ProblemInput:
     def __init__(self, filepath):
@@ -52,6 +63,41 @@ class ProblemInput:
                 skill, level = self.read_line()
                 self.projects[project].needed_skill(skill, level)
 
+        self.simulation()
+
+    def simulation(self):
+        self.time = 0
+        self.available_contributors = set()
+        self.remaining_projects = set()
+
+        self.current_projects = {}
+        self.total_score = 0
+
+    
+    def advance_time(self):
+        # avançar el temps directament a la següent remove
+        # treure els current que acabin en aquest
+        next = self.current_projects.pop()
+        self.time = next.end_time
+        while(self.current_projects.next().time == next)
+        self
+        pass
+
+    def add_project(self, project, skills_contributors):
+        projectObj = self.projects[project]
+        projectObj.start_project(self.time)
+        for skill, contributor in skills_contributors.items():
+            projectObj.add_contributor(skill, contributor)
+
+
+        self.current_projects[project] = projectObj
+
+    def remove_project(self, project):
+        for contributor in project.contributors.values():
+            self.available_contributors.add(contributor)
+
+        self.total_score += project.final_score
+        
             
     def init_variables(self):
         self.n_contributors = -1
