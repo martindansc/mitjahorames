@@ -28,7 +28,7 @@ class Project:
         self.started = False
 
     def needed_skill(self, skillname, level):
-        self.skills[skillname] = level
+        self.skills[skillname] = int(level)
         self.role_skills.add(skillname)
 
     def start_project(self, time):
@@ -131,7 +131,10 @@ class ProblemInput(SolutionInterface):
         self.remaining_projects.remove(project)
 
     def remove_project(self, project):
-        for contributor in project.contributors.values():
+        for skill, contributor in project.contributors.items():
+            contributorObj = self.contributors[contributor]
+            if contributorObj.skills[skill] <= project.skills[skill]:
+                contributorObj.skills[skill] += 1
             self.available_contributors.add(contributor)
 
         self.total_score += project.final_score

@@ -21,3 +21,4 @@ while len(inputData.remaining_projects) > 0:
         break
 
 inputData.save()
+print(inputData.total_score)
