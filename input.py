@@ -1,43 +1,59 @@
-from pathlib import Path  
+from pathlib import Path
+
+class Person:
+    def __init__(self,name):
+        self.name = name
+        self.skills = {}
+
+    def add_skill(self, skillanme, level):
+        self.skills[skillanme] = level
+
+    def increase_skill(self, skillname):
+        self.skills[skillname] += 1
+
+class Project: 
+    def __init__(self, name, days, score, deadline):
+        self.name = name
+        self.days = days
+        self.score = score
+        self.deadline = deadline
+        self.skills = {}
+
+    def needed_skill(self, skillname, level):
+        self.skills[skillname] = level
 
 class ProblemInput:
     def __init__(self, filepath):
         self.init_variables()
         self.input_name = Path(filepath).stem
 
-        with open(filepath) as fp:
-            for cnt, line in enumerate(fp):
-                self.read_line(cnt, line)
+        self.file = open(filepath, 'r')
 
-        for i in range(self.n):
-            c = str(i)
-            for dislike in self.clients_to_dislikes[c]:
-                if dislike in self.like_to_clients:
-                    for c2 in self.like_to_clients[dislike]:
-                        self.incompatible_clients[c] = list(set(self.incompatible_clients.get(c, []) + [c2]))
-                        self.incompatible_clients[c2] = list(set(self.incompatible_clients.get(c2, []) + [c]))
+        line = self.read_line()
 
+        self.num_contributors = int(line[0])
+        self.num_projects = int(line[1])
+
+        for contributor in range(int(self.num_contributors)):
+            name, num_skills = self.read_line()
+
+            for i in range(int(num_skills)):
+                skill, level = self.read_line()
+
+        for i in range(int(self.num_projects)):
+            project, duration, score, best_by, needed_contributors =  self.read_line()
+
+            for j in range(int(needed_contributors)):
+                skill, level = self.read_line()
+
+            
     def init_variables(self):
-        self.like_to_clients = {}
-        self.clients_to_like = {}
-        self.dislike_to_clients = {}
-        self.clients_to_dislikes = {}
-        self.incompatible_clients = {}
+        self.n_contributors = -1
+        self.n_projects = -1
+        self.contributors = {}
+        self.projects = {}
 
-    def read_line(self, cnt, line):
-        line = line.split(" ")
-        if cnt == 0:
-            self.n = int(line[0])
-        elif cnt%2 == 1:
-            id = str((cnt - 1)//2)
-            line.pop(0)
-            self.clients_to_like[id] = list(map(lambda x: x.strip(), line))
-            for i in self.clients_to_like[id]:
-                self.like_to_clients[i] = self.like_to_clients.get(i, []) + [id]
-            self.incompatible_clients[id] = []
-        else:
-            id = str((cnt - 1)//2)
-            line.pop(0)
-            self.clients_to_dislikes[id] = list(map(lambda x: x.strip(), line))
-            for i in self.clients_to_dislikes[id]:
-                self.dislike_to_clients[i] = self.dislike_to_clients.get(i, []) + [id]
+    def read_line(self):
+        myline = self.file.readline()
+        line = myline.split(" ")
+        return line
