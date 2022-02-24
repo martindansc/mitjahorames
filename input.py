@@ -1,3 +1,4 @@
+from operator import attrgetter
 from pathlib import Path
 import pandas as pd
 
@@ -49,6 +50,9 @@ class Project:
 class ProblemInput:
     def __init__(self, filepath):
         self.init_variables()
+        self.simulation()
+
+
         self.input_name = Path(filepath).stem
 
         self.file = open(filepath, 'r')
@@ -65,16 +69,18 @@ class ProblemInput:
             for i in range(int(num_skills)):
                 skill, level = self.read_line()
                 self.contributors[name].add_skill(skill, level)
+                self.available_contributors.add(name)
 
         for i in range(self.num_projects):
             project, duration, score, best_by, needed_contributors =  self.read_line()
             self.projects[project] = Project(project, duration, score, best_by, needed_contributors)
+            self.projects.add(project)
 
             for j in range(int(needed_contributors)):
                 skill, level = self.read_line()
                 self.projects[project].needed_skill(skill, level)
 
-        self.simulation()
+
 
     def simulation(self):
         self.time = 0
@@ -86,11 +92,13 @@ class ProblemInput:
 
     
     def advance_time(self):
-        # avançar el temps directament a la següent remove
-        # treure els current que acabin en aquest
-        next = self.current_projects.pop()
-        self.time = next.end_time
-        pass
+        min_date = min(self.remaining_projects.values(), key=attrgetter('end_date')).end_date
+        for (projectName, projectObj) in self.remaining_projects.items():
+            if projectObj.end_date == min_date:
+                self.remove_project(projectObj)
+                self.remaining_projects.remove(projectName)
+        
+        self.time = min_date
 
     def add_project(self, project, skills_contributors):
         projectObj = self.projects[project]
@@ -98,8 +106,8 @@ class ProblemInput:
         for skill, contributor in skills_contributors.items():
             projectObj.add_contributor(skill, contributor)
 
-
         self.current_projects[project] = projectObj
+        self.remaining_projects.remove(project)
 
     def remove_project(self, project):
         for contributor in project.contributors.values():
