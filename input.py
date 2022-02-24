@@ -124,6 +124,10 @@ class ProblemInput:
         contributors = {}
         for role_skill in unfullfilled_roles:
             contribName = self.choose_contrib(self.full_available_contributors(), role_skill, unfullfilled_roles[role_skill])
+
+            if not contribName:
+                return None
+
             contributors[role_skill] = contribName
 
         self.add_project(project, contributors)
@@ -133,7 +137,7 @@ class ProblemInput:
         for contr in self.available_contributors:
             contributors[contr] = self.contributors[contr]
 
-    def choose_contrib(contributors, skill, level):
+    def choose_contrib(self, contributors, skill, level):
         #choose contributor with less skills and level that fulfills the job
         #dict of contributors, name skill, level skill (int)
 
@@ -150,6 +154,3 @@ class ProblemInput:
         if df.shape[0]>0:
             return df['name'].iloc[0]
         return None
-
-    def choose_contrib(self, available_contributors, skill_name, skill_level): 
-        return self.contributors[0];
