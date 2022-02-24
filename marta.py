@@ -43,8 +43,14 @@ def score_projects(dict_projects, list_projects, time):
 
 
 # inputData = ProblemInput("input/c_collaboration.in.txt")
-inputData = ProblemInput("input/b_better_start_small.in.txt")
+inputData = ProblemInput("input/d_dense_schedule.in.txt")
+# inputData = ProblemInput("input/e_exceptional_skills.in.txt")
+# inputData = ProblemInput("input/f_find_great_mentors.in.txt")
+
+
+# inputData = ProblemInput("input/b_better_start_small.in.txt")
 # inputData = ProblemInput("input/a_an_example.in.txt")
+
 
 
 list_projects = score_projects(inputData.projects, list(inputData.projects.keys()), inputData.time)
