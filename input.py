@@ -1,5 +1,6 @@
 from operator import attrgetter
 from pathlib import Path
+import pandas as pd
 
 class Contributor:
     def __init__(self,name, num_skills):
@@ -35,6 +36,7 @@ class Project:
 
     def add_contributor(self, skill, contributor):
         self.contributors[skill] = contributor
+
     def unfullfilled_roles(self):
         unfillfilled_roles = {}
         for skill_name in self.skills:
@@ -126,10 +128,36 @@ class ProblemInput:
         return line
 
     def assign_contributors(self, project):
-        unfullfilled_roles = project.unfullfilled_roles()
+        unfullfilled_roles = self.projects[project].unfullfilled_roles()
+        contributors = {}
         for role_skill in unfullfilled_roles:
-            contribName = self.choose_contrib(project, role_skill, unfullfilled_roles[role_skill])
-            project.add_contributor(contribName)
+            contribName = self.choose_contrib(self.full_available_contributors(), role_skill, unfullfilled_roles[role_skill])
+            contributors[role_skill] = contribName
 
-    def choose_contrib(self, project): 
+        self.add_project(project, contributors)
+
+    def full_available_contributors(self):
+        contributors = {}
+        for contr in self.available_contributors:
+            contributors[contr] = self.contributors[contr]
+
+    def choose_contrib(contributors, skill, level):
+        #choose contributor with less skills and level that fulfills the job
+        #dict of contributors, name skill, level skill (int)
+
+        contributor_dict  = {'name':[],'skill':[],'level':[],'total_skills':[]}
+        for contr in contributors:
+            if skill in contributors[contr].skills.keys():
+                contributor_dict['name'].append(contr.name)
+                contributor_dict['level'].append(eval(contributors[contr].skills[skill]))
+                contributor_dict['skill'].append(skill)
+                contributor_dict['total_skills'].append(len(contributors[contr].skills.keys()))
+        df = pd.DataFrame(contributor_dict)
+        df = df[df['level']>=level]
+        df.sort_values(by= ['level','total_skills'],ascending=[True,True])
+        if df.shape[0]>0:
+            return df['name'].iloc[0]
+        return None
+
+    def choose_contrib(self, available_contributors, skill_name, skill_level): 
         return self.contributors[0];
