@@ -24,6 +24,13 @@ class Project:
     def needed_skill(self, skillname, level):
         self.skills[skillname] = level
 
+    def unfullfilled_roles(self):
+        unfillfilled_roles = {}
+        for skill_name in self.skills:
+            if not self.contributors[skill_name]:
+                unfillfilled_roles[skill_name] = self.skills[skill_name]
+        return unfillfilled_roles
+
     def has_all_roles_fullfilled(self): 
         return len(self.contributors) == len(self.skills)
 
@@ -68,8 +75,9 @@ class ProblemInput:
         return line
 
     def assign_contributors(self, project):
-        while not project.has_all_roles_fullfilled():
-            contribName = self.choose_contrib(project)
+        unfullfilled_roles = project.unfullfilled_roles()
+        for role_skill in unfullfilled_roles:
+            contribName = self.choose_contrib(project, role_skill, unfullfilled_roles[role_skill])
             project.add_contributor(contribName)
 
     def choose_contrib(self, project): 
