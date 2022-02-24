@@ -9,7 +9,7 @@ class Contributor:
         self.skills = {}
 
     def add_skill(self, skillname, level):
-        self.skills[skillname] = level
+        self.skills[skillname] = int(level)
 
     def increase_skill(self, skillname):
         self.skills[skillname] += 1
@@ -40,7 +40,7 @@ class Project:
     def unfullfilled_roles(self):
         unfillfilled_roles = {}
         for skill_name in self.skills:
-            if not self.contributors[skill_name]:
+            if not skill_name in self.contributors:
                 unfillfilled_roles[skill_name] = self.skills[skill_name]
         return unfillfilled_roles
 
@@ -106,8 +106,8 @@ class ProblemInput:
             print("You should add at least one project to advance the time")
             return None
             
-        min_date = min(self.current_projects.values(), key=attrgetter('end_date')).end_date
-        for (projectName, projectObj) in self.remaining_projects.items():
+        min_date = min(self.current_projects.values(), key=attrgetter('end_time')).end_time
+        for (projectName, projectObj) in self.current_projects.items():
             if projectObj.end_date == min_date:
                 self.remove_project(projectObj)
                 self.remaining_projects.remove(projectName)
@@ -145,7 +145,7 @@ class ProblemInput:
         unfullfilled_roles = self.projects[project].unfullfilled_roles()
         contributors = {}
         for role_skill in unfullfilled_roles:
-            contribName = self.choose_contrib(self.full_available_contributors(), role_skill, unfullfilled_roles[role_skill])
+            contribName = self.choose_contrib(role_skill, unfullfilled_roles[role_skill])
 
             if not contribName:
                 return None
@@ -154,25 +154,21 @@ class ProblemInput:
 
         self.add_project(project, contributors)
 
-    def full_available_contributors(self):
-        contributors = {}
-        for contr in self.available_contributors:
-            contributors[contr] = self.contributors[contr]
-
-    def choose_contrib(self, contributors, skill, level):
+    def choose_contrib(self, skill, level):
         #choose contributor with less skills and level that fulfills the job
         #dict of contributors, name skill, level skill (int)
 
         contributor_dict  = {'name':[],'skill':[],'level':[],'total_skills':[]}
-        for contr in contributors:
-            if skill in contributors[contr].skills.keys():
+        for name in self.available_contributors:
+            contr = self.contributors[name]
+            if skill in contr.skills.keys():
                 contributor_dict['name'].append(contr.name)
-                contributor_dict['level'].append(eval(contributors[contr].skills[skill]))
+                contributor_dict['level'].append(int(contr.skills[skill]))
                 contributor_dict['skill'].append(skill)
-                contributor_dict['total_skills'].append(len(contributors[contr].skills.keys()))
+                contributor_dict['total_skills'].append(len(contr.skills.keys()))
         df = pd.DataFrame(contributor_dict)
-        df = df[df['level']>=level]
-        df.sort_values(by= ['level','total_skills'],ascending=[True,True])
+        df = df[df['level']>= int(level)]
+        df.sort_values(by= ['level','total_skills'], ascending=[True,True])
         if df.shape[0]>0:
             return df['name'].iloc[0]
         return None
