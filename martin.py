@@ -5,4 +5,3 @@ import utils
 
 inputData = ProblemInput("input/a_an_example.in.txt")
 
-print(inputData)
