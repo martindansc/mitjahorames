@@ -104,7 +104,7 @@ class ProblemInput:
     def advance_time(self):
         if len(self.current_projects) == 0:
             print("You should add at least one project to advance the time")
-            return None
+            return False
             
         min_date = min(self.current_projects.values(), key=attrgetter('end_time')).end_time
         for (projectName, projectObj) in list(self.current_projects.items()).copy():
@@ -113,6 +113,7 @@ class ProblemInput:
                 del self.current_projects[projectName]
         
         self.time = min_date
+        return True
 
     def add_project(self, project, skills_contributors):
         projectObj = self.projects[project]
