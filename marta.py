@@ -21,8 +21,7 @@ def choose_contrib(contributors,skill,level):
 
 def score_projects(dict_projects, list_projects, time):
     """
-    dict of all projects, list of projects available (names), current
-    """
+    dict of all projects, list of projects available (names), current"""
     d = {'name': [], 'deadline': [], 'score': [], 'needed_contributors': []}
 
     for proj in list_projects:
@@ -31,8 +30,12 @@ def score_projects(dict_projects, list_projects, time):
         d['deadline'].append(eval(dict_projects[proj].deadline))
         d['needed_contributors'].append(dict_projects[proj].needed_contributors)
     df = pd.DataFrame(d)
+    #     df = df.sort_values(by=['best_before','points','duration'], ascending= [True,False,True])
     df['score_total'] = df.apply(
         lambda row: row['score'] - (time - row['deadline']) if time > row['deadline'] else row['score'], axis=1)
     df = df.sort_values(by=['score_total', 'needed_contributors'], ascending=[False, True])
-    return list(df['name'])
+    df = df[df['score_total'] > 0]
+    if df.shape[0] > 0:
+        return list(df['name'])
 
+    return []
