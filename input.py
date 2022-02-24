@@ -107,7 +107,7 @@ class ProblemInput:
             return None
             
         min_date = min(self.current_projects.values(), key=attrgetter('end_time')).end_time
-        for (projectName, projectObj) in self.current_projects.items():
+        for (projectName, projectObj) in list(self.current_projects.items()).copy():
             if projectObj.end_time == min_date:
                 self.remove_project(projectObj)
                 del self.current_projects[projectName]
