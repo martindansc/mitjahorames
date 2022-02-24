@@ -73,8 +73,9 @@ class ProblemInput:
 
         for i in range(self.num_projects):
             project, duration, score, best_by, needed_contributors =  self.read_line()
+            self.remaining_projects.add(project)
             self.projects[project] = Project(project, duration, score, best_by, needed_contributors)
-            self.projects.add(project)
+            #self.projects.add(project)
 
             for j in range(int(needed_contributors)):
                 skill, level = self.read_line()
@@ -90,9 +91,14 @@ class ProblemInput:
         self.current_projects = {}
         self.total_score = 0
 
+    def full_remaining_projects(self):
+        rp = set()
+        for project in self.remaining_projects:
+            rp.add(self.projects[project])
+        return rp
     
     def advance_time(self):
-        min_date = min(self.remaining_projects.values(), key=attrgetter('end_date')).end_date
+        min_date = min(self.full_remaining_projects(), key=attrgetter('end_date')).end_date
         for (projectName, projectObj) in self.remaining_projects.items():
             if projectObj.end_date == min_date:
                 self.remove_project(projectObj)
