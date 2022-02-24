@@ -78,8 +78,8 @@ class ProblemInput:
 
         for i in range(self.num_projects):
             project, duration, score, best_by, needed_contributors =  self.read_line()
-            self.projects[project] = Project(project, duration, score, best_by, needed_contributors)
             self.remaining_projects.add(project)
+            self.projects[project] = Project(project, duration, score, best_by, needed_contributors)
 
             for j in range(int(needed_contributors)):
                 skill, level = self.read_line()
@@ -95,9 +95,14 @@ class ProblemInput:
         self.current_projects = {}
         self.total_score = 0
 
+    def full_remaining_projects(self):
+        rp = set()
+        for project in self.remaining_projects:
+            rp.add(self.projects[project])
+        return rp
     
     def advance_time(self):
-        min_date = min(self.remaining_projects, key=attrgetter('end_date')).end_date
+        min_date = min(self.current_projects.values(), key=attrgetter('end_date')).end_date
         for (projectName, projectObj) in self.remaining_projects.items():
             if projectObj.end_date == min_date:
                 self.remove_project(projectObj)
@@ -137,6 +142,10 @@ class ProblemInput:
         contributors = {}
         for role_skill in unfullfilled_roles:
             contribName = self.choose_contrib(self.full_available_contributors(), role_skill, unfullfilled_roles[role_skill])
+
+            if not contribName:
+                return None
+
             contributors[role_skill] = contribName
 
         self.add_project(project, contributors)
@@ -146,7 +155,7 @@ class ProblemInput:
         for contr in self.available_contributors:
             contributors[contr] = self.contributors[contr]
 
-    def choose_contrib(contributors, skill, level):
+    def choose_contrib(self, contributors, skill, level):
         #choose contributor with less skills and level that fulfills the job
         #dict of contributors, name skill, level skill (int)
 
@@ -163,6 +172,3 @@ class ProblemInput:
         if df.shape[0]>0:
             return df['name'].iloc[0]
         return None
-
-    def choose_contrib(self, available_contributors, skill_name, skill_level): 
-        return self.contributors[0]
