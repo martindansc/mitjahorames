@@ -44,9 +44,10 @@ def score_projects(dict_projects, list_projects, time):
 
 
 # inputData = ProblemInput("input/a_an_example.in.txt")
-inputData = ProblemInput("input/b_better_start_small.in.txt")
+# inputData = ProblemInput("input/b_better_start_small.in.txt")
 # inputData = ProblemInput("input/c_collaboration.in.txt")
-# inputData = ProblemInput("input/d_dense_schedule.in.txt")
+inputData = ProblemInput("input/d_dense_schedule.in.txt")
+
 # inputData = ProblemInput("input/e_exceptional_skills.in.txt")
 # inputData = ProblemInput("input/f_find_great_mentors.in.txt")
 
@@ -66,8 +67,8 @@ while len(list_projects):
 print(inputData.total_score)
 
 #WRITE OUTPUT
-with open('test_b_hash2.txt','w') as f:
-    f.write(str(len(inputData.projects.keys()))+'\n')
+with open('test_d_hash.txt','w') as f:
+    f.write(str(len(inputData.final_order_2))+'\n')
     for project in inputData.final_order_2:
         s =' '.join(inputData.projects[project].contributors.values())
         f.write(project+'\n')
