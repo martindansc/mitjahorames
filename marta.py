@@ -42,14 +42,13 @@ def score_projects(dict_projects, list_projects, time):
     return []
 
 
+
+# inputData = ProblemInput("input/a_an_example.in.txt")
+inputData = ProblemInput("input/b_better_start_small.in.txt")
 # inputData = ProblemInput("input/c_collaboration.in.txt")
-inputData = ProblemInput("input/d_dense_schedule.in.txt")
+# inputData = ProblemInput("input/d_dense_schedule.in.txt")
 # inputData = ProblemInput("input/e_exceptional_skills.in.txt")
 # inputData = ProblemInput("input/f_find_great_mentors.in.txt")
-
-
-# inputData = ProblemInput("input/b_better_start_small.in.txt")
-# inputData = ProblemInput("input/a_an_example.in.txt")
 
 
 
@@ -59,9 +58,18 @@ while len(list_projects):
     for i in range(len(list_projects)):
         inputData.assign_contributors(list_projects[i])
 
-    inputData.advance_time()
-    if len(inputData.remaining_projects) ==0:
+    if inputData.advance_time() is False:
+        break
+    if len(inputData.remaining_projects) == 0:
         break
     list_projects = score_projects(inputData.projects, inputData.remaining_projects, inputData.time)
 print(inputData.total_score)
-inputData.save()
+
+#WRITE OUTPUT
+with open('test_b_hash2.txt','w') as f:
+    f.write(str(len(inputData.projects.keys()))+'\n')
+    for project in inputData.final_order_2:
+        s =' '.join(inputData.projects[project].contributors.values())
+        f.write(project+'\n')
+        f.write(s+'\n')
+# inputData.save()

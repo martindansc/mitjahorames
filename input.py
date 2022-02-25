@@ -43,7 +43,7 @@ class Project:
     def unfullfilled_roles(self):
         unfillfilled_roles = {}
         for skill_name in self.skills:
-            if not skill_name in self.contributors:
+            if skill_name not in self.contributors:
                 unfillfilled_roles[skill_name] = self.skills[skill_name]
         return unfillfilled_roles
 
@@ -121,14 +121,15 @@ class ProblemInput(SolutionInterface):
         return True
 
     def add_project(self, project, skills_contributors):
-        projectObj = self.projects[project]
-        projectObj.start_project(self.time)
-        for skill, contributor in skills_contributors.items():
-            projectObj.add_contributor(skill, contributor)
-            self.available_contributors.remove(contributor)
+        if skills_contributors !={}:
+            projectObj = self.projects[project]
+            projectObj.start_project(self.time)
+            for skill, contributor in skills_contributors.items():
+                projectObj.add_contributor(skill, contributor)
+                self.available_contributors.remove(contributor)
 
-        self.current_projects[project] = projectObj
-        self.remaining_projects.remove(project)
+            self.current_projects[project] = projectObj
+            self.remaining_projects.remove(project)
 
     def remove_project(self, project):
         for skill, contributor in project.contributors.items():
@@ -142,6 +143,9 @@ class ProblemInput(SolutionInterface):
     def init_variables(self):
         self.contributors = {}
         self.projects = {}
+        self.final_order = []
+        self.final_order_2 = []
+
 
     def read_line(self):
         myline = self.file.readline()
@@ -150,24 +154,24 @@ class ProblemInput(SolutionInterface):
 
     def assign_contributors(self, project):
         unfullfilled_roles = self.projects[project].unfullfilled_roles()
+        if len(unfullfilled_roles.keys()) != len(self.projects[project].role_skills):
+            return None
         contributors = {}
         for role_skill in unfullfilled_roles:
             contribName = self.choose_contrib(role_skill, unfullfilled_roles[role_skill], contributors.values())
 
             if contribName:
-               contributors[role_skill] = contribName
+                if contribName == 'LarryX':
+                    print(project,' ',self.contributors['LarryX'].skills)
+                contributors[role_skill] = contribName
 
-        for role_skill in unfullfilled_roles:
-            if role_skill not in contributors.keys():
+            else:
+                return None
 
-                contribName = self.choose_contrib(role_skill, unfullfilled_roles[role_skill], contributors.values())
-
-                if contribName:
-                    contributors[role_skill] = contribName
-                else:
-                    return None
-
+        # print(project,contributors.keys(),contributors.values())
+        self.final_order_2.append(project)
         self.add_project(project, contributors)
+
 
     def choose_contrib(self, skill, level, project_contributors):
         #choose contributor with less skills and level that fulfills the job
@@ -184,13 +188,13 @@ class ProblemInput(SolutionInterface):
                     contributor_dict['total_skills'].append(len(contr.skills.keys()))
         df = pd.DataFrame(contributor_dict)
 
-        level_to_compare = int(level)
-        for contrib in project_contributors:
-            mentor_skills = self.contributors[contrib].skills
-            if hasattr(mentor_skills, skill) and mentor_skills[skill] >= level:
-                level_to_compare -= 1
+        # level_to_compare = int(level)
+        # for contrib in project_contributors:
+        #     mentor_skills = self.contributors[contrib].skills
+        #     if hasattr(mentor_skills, skill) and mentor_skills[skill] >= level:
+        #         level_to_compare -= 1
 
-        df = df[df['level']>= level_to_compare]
+        df = df[df['level']>= level]
         df.sort_values(by= ['level','total_skills'], ascending=[True,True])
         if df.shape[0]>0:
             return df['name'].iloc[0]
